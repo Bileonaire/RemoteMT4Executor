@@ -31,10 +31,17 @@ router.get('/trades/:acc', asyncHandler(async (req, res)=>{
     }
 }));
 
-// Send a DELETE request to /trades/:id Execution confirmation
+// Set sucessful trade /trades/:id Successful Execution confirmation
 router.get("/trades/:acc/:id", asyncHandler(async(req,res, next) => {
     const trade = await records.getTradeById(req.params.id);
     await records.updateTrade(trade, req.params.acc, "Executed_Successfully");
+    res.status(200).end();
+}));
+
+// Set unsucessful trade /trades/unsuccessful/;acc/:id unsuccessful Execution
+router.get("/trades/unsuccessful/:acc/:id", asyncHandler(async(req,res, next) => {
+    const trade = await records.getTradeById(req.params.id);
+    await records.updateTrade(trade, req.params.acc, "Execution_Failed");
     res.status(200).end();
 }));
 
