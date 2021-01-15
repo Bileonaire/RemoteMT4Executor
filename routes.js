@@ -16,8 +16,8 @@ function asyncHandler(cb){
 
 // Send a GET request to /trades to READ a list of trades
 router.get('/trades/all', asyncHandler(async (req, res)=>{
-    const trades = await records.getTrades();
-    res.json(trades);
+    const trades = await records.getData();
+    res.json(data.trades);
 }));
 
 
@@ -74,6 +74,17 @@ router.delete("/trades/:id", asyncHandler(async(req,res, next) => {
     const quote = await records.getTrade(req.params.id);
     await records.deleteTrade(quote);
     res.status(204).end();
+}));
+
+router.get('/accounts', asyncHandler(async (req, res) => {
+    const accounts = await records.getAccounts();
+    res.json(accounts);
+}));
+
+// GET currencies
+router.get('/currencies', asyncHandler(async (req, res) => {
+    const currencies = await records.getCurrencies();
+    res.json(currencies);
 }));
 
 module.exports = router;

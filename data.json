@@ -1,4 +1,25 @@
 {
+  "currencies": [
+    "USDJPY",
+    "AUDUSD",
+    "NZDUSD",
+    "EURUSD",
+    "USDCHF",
+    "GBPUSD",
+    "USDCAD"
+  ],
+  "accounts": [
+    {
+      "account_number": 1,
+      "riskDollars": "30",
+      "execute": false
+    },
+    {
+      "account_number": 2,
+      "riskDollars": "40",
+      "execute": false
+    }
+  ],
   "records": [
     {
       "ordertype": "sell",
@@ -23,63 +44,21 @@
     {
       "ordertype": "sell",
       "accounts": {
-        "221": {
-          "account": 50,
-          "percentage_risk": 2,
+        "1": {
+          "account": "30",
+          "percentage_risk": 99.5,
           "status": "ready"
         },
-        "10001111221": {
-          "account": 1000000,
-          "percentage_risk": 1,
-          "status": "Mt4_Recieved"
-        }
-      },
-      "pendingorderprice": 0,
-      "sl_tp_type": "price",
-      "sl": 0,
-      "tp": 0,
-      "id": 2
-    },
-    {
-      "ordertype": "sell",
-      "accounts": {
-        "221": {
-          "account": 50,
-          "percentage_risk": 2,
+        "2": {
+          "account": "40",
+          "percentage_risk": 99.5,
           "status": "ready"
-        },
-        "10001111221": {
-          "account": 1000000,
-          "percentage_risk": 1,
-          "status": "Executed_Successfully"
         }
       },
-      "pendingorderprice": 0,
-      "sl_tp_type": "price",
-      "sl": 0,
-      "tp": 0,
-      "id": 3
-    },
-    {
-      "ordertype": "sell",
-      "symbol": "EURUSD",
-      "accounts": {
-        "221": {
-          "account": 50,
-          "percentage_risk": 2,
-          "status": "ready"
-        },
-        "10001111221": {
-          "account": 1000000,
-          "percentage_risk": 1,
-          "status": "Executed_Successfully"
-        }
-      },
-      "pendingorderprice": 0,
-      "sl_tp_type": "price",
-      "sl": 0,
-      "tp": 0,
-      "id": 4
+      "pendingorderprice": "",
+      "sl": "11",
+      "tp": "111",
+      "id": 10
     }
   ]
 }
