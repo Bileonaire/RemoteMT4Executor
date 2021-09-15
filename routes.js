@@ -87,4 +87,12 @@ router.get('/currencies', asyncHandler(async (req, res) => {
     res.json(currencies);
 }));
 
+// Add currencies
+// Send a Add currency request to /currencies/:id DELETE a trade
+router.post('/currencies/:currency', asyncHandler(async (req, res) => {
+    const currency = req.params.currency;
+    const currencies = await records.AddCurrency(currency);
+    res.json(currencies);
+}));
+
 module.exports = router;

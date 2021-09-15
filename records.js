@@ -108,6 +108,16 @@ async function getCurrencies(){
   return data.currencies;
 }
 
+async function AddCurrency(currency){
+  const data = await getData();
+  if (currency) {
+    let existing = data.currencies.find(item => item == currency);
+    if (!existing) data.currencies.push(currency);
+  }
+  await save(data);
+  return data.currencies;
+}
+
 module.exports = {
   getData,
   getTrade,
@@ -117,4 +127,5 @@ module.exports = {
   getTradeById,
   getAccounts,
   getCurrencies,
+  AddCurrency,
 }

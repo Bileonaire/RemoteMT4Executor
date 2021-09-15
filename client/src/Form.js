@@ -2,13 +2,12 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const Form = () => {
-    const [data, setData] = useState({password: '', symbol: '', orderType: '', slPrice: '', tpPrice: '', pendingOrderPrice: ''});
+    const [data, setData] = useState({ password: '', symbol: '', orderType: '', slPrice: '', tpPrice: '', pendingOrderPrice: '' });
     const [currencies, setCurrencies] = useState([]);
     const [success, setSuccess] = useState('');
     const [error, setError] = useState('');
     const [accounts, setAccounts] = useState([]);
     // const [checkboxes, setCheckboxes] = useState({});
-
 
     const PASS = 't';
 
@@ -16,57 +15,58 @@ const Form = () => {
 
     useEffect(() => {
         axios.get(`${baseUrl}/currencies`)
-        .then(response => setCurrencies(response.data))
-        .catch(err => {
-            console.log('Error fetching and parsing data', err.message);
-            setError(err.message);
-        });
+            .then(response => setCurrencies(response.data))
+            .catch(err => {
+                console.log('Error fetching and parsing data', err.message);
+                setError(err.message);
+            });
     }, []);
 
     useEffect(() => {
         axios.get(`${baseUrl}/accounts`)
-        .then(response => setAccounts(response.data))
-        .catch(err => {
-            console.log('Error fetching and parsing data', err.message);
-            setError(err.message);
-        });
+            .then(response => setAccounts(response.data))
+            .catch(err => {
+                console.log('Error fetching and parsing data', err.message);
+                setError(err.message);
+            });
     }, []);
 
     const onPasswordChange = (e) => setData((prev) => ({ ...prev, "password": e.target.value }));
-    const onSymbolChange = (e) => setData((prev) => ({ ...prev, "symbol": e.target.value}));
-    const onOrderTypeChange = (e) => setData((prev) => ({ ...prev, "orderType": e.target.value}));
-    const onSlPriceChange = (e) => setData((prev) => ({ ...prev, "slPrice": e.target.value}));
-    const onTpPriceChange = (e) => setData((prev) => ({ ...prev, "tpPrice": e.target.value}));
-    const onPendingPriceChange = (e) => setData((prev) => ({ ...prev, "pendingOrderPrice": e.target.value}));
+    const onSymbolChange = (e) => setData((prev) => ({ ...prev, "symbol": e.target.value }));
+    const onOrderTypeChange = (e) => setData((prev) => ({ ...prev, "orderType": e.target.value }));
+    const onSlPriceChange = (e) => setData((prev) => ({ ...prev, "slPrice": e.target.value }));
+    const onTpPriceChange = (e) => setData((prev) => ({ ...prev, "tpPrice": e.target.value }));
+    const onPendingPriceChange = (e) => setData((prev) => ({ ...prev, "pendingOrderPrice": e.target.value }));
     const handleAccounts = (e) => console.log(e);
 
     const clear = () => {
-        setData({password: '', symbol: '', orderType: '', slPrice: '', tpPrice: '', pendingOrderPrice: ''});
+        setData({ password: '', symbol: '', orderType: '', slPrice: '', tpPrice: '', pendingOrderPrice: '' });
     };
 
-//  Payload Example
-//     { "ordertype": "sell",
-//       "accounts": {
-//         "1" : {
-//           "account": 0,
-//           "percentage_risk": 2
-//         },
-//         "222222" : {
-//           "account": 50,
-//           "percentage_risk": 2
-//         }
-//       },
-//       "pendingorderprice": 0,
-//       "sl": 0,
-//       "tp": 0,
-//       "id": 1
-//     }
+    //  Payload Example
+    //     { "ordertype": "sell",
+    //       "accounts": {
+    //         "1" : {
+    //           "account": 0,
+    //           "percentage_risk": 2
+    //         },
+    //         "222222" : {
+    //           "account": 50,
+    //           "percentage_risk": 2
+    //         }
+    //       },
+    //       "pendingorderprice": 0,
+    //       "sl": 0,
+    //       "tp": 0,
+    //       "id": 1
+    //     }
 
     const handleSubmit = (e) => {
-        if(data.password === PASS) {
+        if (data.password === PASS) {
             e.preventDefault();
             const payload = {
                 "ordertype": data.orderType,
+                "symbol": data.symbol,
                 "pendingorderprice": data.pendingOrderPrice,
                 "sl": data.slPrice,
                 "tp": data.tpPrice,
@@ -75,16 +75,16 @@ const Form = () => {
             let i;
             for (i in accounts) {
                 const acc = accounts[i];
-                if(acc.execute) {
+                if (acc.execute) {
                     const accountDetails = {};
                     const accNo = acc.account_number;
-                    accountDetails[accNo] = {"account": acc.riskDollars, "percentage_risk": 99.5};
-                    payload.accounts = {...payload.accounts, ...accountDetails}
+                    accountDetails[accNo] = { "account": acc.riskDollars, "percentage_risk": 99.5 };
+                    payload.accounts = { ...payload.accounts, ...accountDetails }
                 }
             }
 
             axios.post(`${baseUrl}/trades`, payload)
-            .then((res) => setSuccess(res.data.message));
+                .then((res) => setSuccess(res.data.message));
             clear();
         } else {
             setError("invalid password");
@@ -113,23 +113,23 @@ const Form = () => {
         <div className="container">
             <form className="col-md-6 mx-auto mt-4" onSubmit={handleSubmit}>
 
-            {
-            error
-            ?   <div className="alert alert-danger alert-dismissible fade show" role="alert">
-                    <strong>Error! </strong>{error}
-                    <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            : ""
-            }
+                {
+                    error
+                        ? <div className="alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>Error! </strong>{error}
+                            <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        : ""
+                }
 
-            {
-            success
-            ?   <div className="alert alert-success alert-dismissible fade show" role="alert">
-                    <strong>Success! </strong>{success}
-                    <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            : ""
-            }
+                {
+                    success
+                        ? <div className="alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>Success! </strong>{success}
+                            <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        : ""
+                }
 
                 <div className="mb-3">
                     <label htmlFor="Password1" className="form-label">Password</label>
@@ -156,7 +156,7 @@ const Form = () => {
                 <div className="input-group my-3">
                     <span className="input-group-text" id="inputGroup-sizing-default">Stop Loss</span>
                     <input type="text" className="form-control" aria-label="Sizing example input" value={data.slPrice} onChange={onSlPriceChange}
-                        aria-describedby="inputGroup-sizing-default" required/>
+                        aria-describedby="inputGroup-sizing-default" required />
                 </div>
 
                 <div className="input-group mb-3">
@@ -175,21 +175,21 @@ const Form = () => {
                 {accounts.map((account) => (
                     <div key={account.account_number} className="form-check">
                         <label>
-                        <input
-                        type="checkbox"
-                        name={account.account_number}
-                        checked={account.execute}
-                        onChange={() => handleCheckboxChange(account.account_number)}
-                        className="form-check-input"
-                    />
-                    {account.account_number}
-                    </label>
-                    <div className="input-group input-group-sm mb-3">
-                        <span className="input-group-text" id="inputGroup-sizing-sm">Risk in dollars</span>
-                        <input value={account.riskDollars} name={account.account_number} onChange={handleRiskChange} type="text" className="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" />
+                            <input
+                                type="checkbox"
+                                name={account.account_number}
+                                checked={account.execute}
+                                onChange={() => handleCheckboxChange(account.account_number)}
+                                className="form-check-input"
+                            />
+                            {account.account_number}
+                        </label>
+                        <div className="input-group input-group-sm mb-3">
+                            <span className="input-group-text" id="inputGroup-sizing-sm">Risk in dollars</span>
+                            <input value={account.riskDollars} name={account.account_number} onChange={handleRiskChange} type="text" className="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" />
+                        </div>
+                        <hr />
                     </div>
-                    <hr />
-                </div>
                 ))}
 
                 <div className="d-grid col-6 mx-auto mb-4">
