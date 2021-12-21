@@ -4,58 +4,58 @@ const router = express.Router();
 
 const records = require('./records');
 
-function asyncHandler(cb){
-    return async (req,res, next) => {
+function asyncHandler(cb) {
+    return async (req, res, next) => {
         try {
             await cb(req, res, next);
-        } catch(err) {
+        } catch (err) {
             next(err);
         }
     }
 }
 
 // Send a GET request to /trades to READ a list of trades
-router.get('/trades/all', asyncHandler(async (req, res)=>{
+router.get('/trades/all', asyncHandler(async (req, res) => {
     const trades = await records.getData();
-    res.json(data.trades);
+    res.json(trades);
 }));
 
 
-router.get('/trades/:acc', asyncHandler(async (req, res)=>{
+router.get('/trades/:acc', asyncHandler(async (req, res) => {
     const trade = await records.getTrade(req.params.acc);
-    if(trade){
+    if (trade) {
         await records.updateTrade(trade, req.params.acc, "Mt4_Recieved");
         res.json(trade);
     } else {
-        res.status(404).json({message: "Quote not found."});
+        res.status(404).json({ message: "Quote not found." });
     }
 }));
 
 // Set sucessful trade /trades/:id Successful Execution confirmation
-router.get("/trades/:acc/:id", asyncHandler(async(req,res, next) => {
+router.get("/trades/:acc/:id", asyncHandler(async (req, res, next) => {
     const trade = await records.getTradeById(req.params.id);
     await records.updateTrade(trade, req.params.acc, "Executed_Successfully");
     res.status(200).end();
 }));
 
 // Set unsucessful trade /trades/unsuccessful/;acc/:id unsuccessful Execution
-router.get("/trades/unsuccessful/:acc/:id", asyncHandler(async(req,res, next) => {
+router.get("/trades/unsuccessful/:acc/:id", asyncHandler(async (req, res, next) => {
     const trade = await records.getTradeById(req.params.id);
     await records.updateTrade(trade, req.params.acc, "Execution_Failed");
     res.status(200).end();
 }));
 
 //Send a POST request to /trades to  CREATE a new quote
-router.post('/trades', asyncHandler( async (req, res)=>{
-    if(req.body.ordertype){
+router.post('/trades', asyncHandler(async (req, res) => {
+    if (req.body.ordertype) {
         const tradeData = {
             ordertype: req.body.ordertype,
             symbol: req.body.symbol,
             accounts: req.body.accounts,
-            pendingorderprice : req.body.pendingorderprice,
-            sl_tp_type : req.body.sl_tp_type,
-            sl : req.body.sl,
-            tp : req.body.tp
+            pendingorderprice: req.body.pendingorderprice,
+            sl_tp_type: req.body.sl_tp_type,
+            sl: req.body.sl,
+            tp: req.body.tp
         };
         for (i in tradeData.accounts) {
             const x = tradeData.accounts[i];
@@ -65,12 +65,12 @@ router.post('/trades', asyncHandler( async (req, res)=>{
         const trade = await records.createTrade(tradeData);
         res.status(201).json(trade);
     } else {
-        res.status(400).json({message: "Ordertype required."});
+        res.status(400).json({ message: "Ordertype required." });
     }
 }));
 
 // Send a DELETE request to /trades/:id DELETE a trade
-router.delete("/trades/:id", asyncHandler(async(req,res, next) => {
+router.delete("/trades/:id", asyncHandler(async (req, res, next) => {
     const quote = await records.getTrade(req.params.id);
     await records.deleteTrade(quote);
     res.status(204).end();
